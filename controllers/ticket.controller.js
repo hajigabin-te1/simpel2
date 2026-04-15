@@ -1,8 +1,8 @@
-import Ticket from '../models/ticket.model.js';
+import Ticket from '../models/Ticket.model.js';
 import { validationResult } from 'express-validator';
-import TicketLog from '../models/ticketLog.model.js';
-import Notification from '../models/notification.model.js';
-import User from '../models/user.model.js';
+import TicketLog from '../models/TicketLog.model.js';
+import Notification from '../models/Notification.model.js';
+import User from '../models/User.model.js';
 import { getIO } from '../socket/socketHandler.js';
 import { kirimNotifikasiEmail } from '../utils/sendEmail.js';
 
@@ -345,3 +345,57 @@ export const getTicketLogs = async (req,res) => {
 }
 
 // Kasih rating dan review setelah pelayanan selesai
+export const kasihRating = async (req,res) => {
+
+    try {
+        const { nilai, ulasan } = req.body;
+        if (nilai < 1 || nilai > 5) {
+            return res.status(400).json({
+                success : false,
+                message : "Nilai rating harus antara 1 sampai 5"
+            });
+        }
+
+        const tiket = await Ticket.findOne({ _id : req.params.id, mahasiswa : req.user._id, status : 'selesai' });
+        if (!tiket) {
+            return res.status(404).json({
+                success : false,
+                message : "Tiket tidak ditemukan atau belum selesai"
+            });
+        }
+
+        // jika sudah pernah kasih rating
+        if (tiket.rating?.nilai) {
+            return res.status(400).json({
+                success : false,
+                message : "Anda sudah ngasih rating untuk layanan ini"
+            });
+        }
+
+        // tiket.rating = nilai;
+        // tiket.ulasan = ulasan;
+        // await tiket.save();
+        tiket.rating = { nilai, ulasan, tanggal : new Date()};
+        await tiket.save();
+
+        await catatanLog({
+            tiketId : tiket._id,
+            userId : req.user._id,
+            aksi : 'rating_diberikan',
+            keterangan : `Mahasiswa memberikan rating ${nilai} dengan ulasan: ${ulasan}`,
+        });
+
+        res.status(200).json({
+            success : true,
+            message : "Terima kasih sudah memberikan rating dan ulasan untuk layanan kami!",
+            data : tiket
+        });
+    } catch (error) {
+        res.status(500).json({
+            success : false,
+            message : error.message
+        });
+    }
+
+ }
+

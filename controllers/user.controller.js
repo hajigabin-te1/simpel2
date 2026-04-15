@@ -1,5 +1,5 @@
 import { validationResult } from "express-validator";
-import User from "../models/user.model.js";
+import User from "../models/User.model.js";
 
 // Get User (admin only)
 export const getUser = async (req,res) => {
