@@ -1,27 +1,50 @@
-import mongoose from "mongoose";
+// import mongoose from "mongoose";
+
+// export const connectDB = async () => {
+//   try {
+//     const conn = await mongoose.connect(process.env.MONGO_URI, {
+//       dbName: "batin-hub",
+//       useNewUrlParser: true,
+//       useUnifiedTopology: true,
+//     });
+
+//     console.log("MongoDB connected", conn.connection.host);
+//     mongoose.connection.on("error", (err) => {
+//       console.error("MongoDB connection error:", err);
+//     });
+//     mongoose.connection.on("disconnected", () => {
+//       console.warn("MongoDB disconnected");
+//     });
+//     mongoose.connection.on("reconnected", () => {
+//       console.log("MongoDB reconnected");
+//     });
+
+//   } catch (error) {
+//     console.error("MongoDB connection error:", error);
+//     process.exit(1);
+//   }
+// }
+
+import mongoose from 'mongoose';
 
 export const connectDB = async () => {
   try {
     const conn = await mongoose.connect(process.env.MONGO_URI, {
-      dbName: "batin_hub",
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
+      dbName: 'batin-hub'
     });
 
-    console.log("MongoDB connected", conn.connection.host);
-    mongoose.connection.on("error", (err) => {
-      console.error("MongoDB connection error:", err);
+    console.log(`✅ MongoDB terhubung: ${conn.connection.host}`);
+
+    mongoose.connection.on('disconnected', () => {
+      console.warn('⚠️  MongoDB terputus, mencoba reconnect...');
     });
-    mongoose.connection.on("disconnected", () => {
-      console.warn("MongoDB disconnected");
-    });
-    mongoose.connection.on("reconnected", () => {
-      console.log("MongoDB reconnected");
+
+    mongoose.connection.on('reconnected', () => {
+      console.log('✅ MongoDB berhasil reconnect');
     });
 
   } catch (error) {
-    console.error("MongoDB connection error:", error);
+    console.error('❌ Gagal koneksi MongoDB:', error.message);
     process.exit(1);
   }
-}
-
+};

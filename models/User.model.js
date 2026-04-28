@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema({
     nama : {
@@ -50,10 +50,10 @@ const userSchema = new mongoose.Schema({
         type : Boolean,
         default : true,
     },
- }, { timestamps: true });
+}, { timestamps: true });
 
  // Hash password sebelum disimpan
- userSchema.pre("save", async function (next) {
+userSchema.pre("save", async function (next) {
     if (!this.isModified("password")) return next();
     try {
         const salt = await bcrypt.genSalt(10);
@@ -62,20 +62,20 @@ const userSchema = new mongoose.Schema({
     } catch (err) {
         next(err);
     }
- });
- 
+});
+
  // Metode untuk membandingkan password saat login
- userSchema.methods.comparePassword = async function (candidatePassword) {
+userSchema.methods.comparePassword = async function (candidatePassword) {
     return await bcrypt.compare(candidatePassword, this.password);
- };
+};
 
  // Sembunyikan field sensitif saat toJSON
- userSchema.methods.JSON = function() {
+userSchema.methods.JSON = function() {
     const obj = this.toObject();
     delete obj.password;
     return obj;
- };
+};
 
- const User = mongoose.model("User", userSchema);
- export default User;
+const User = mongoose.model("User", userSchema);
+export default User;
 

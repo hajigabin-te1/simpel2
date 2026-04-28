@@ -12,6 +12,7 @@ import { initSocket } from './socket/socketHandler.js';
 // Import routes
 import authRoutes from './routes/auth.routes.js';
 
+// ========================== App Initialization ==========================
 
 dotenv.config();
 
