@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { validationResult } from 'express-validator';
 import User from '../models/User.model.js';
+import bcrypt from 'bcryptjs';
 
 // helper buat token
 const generateToken = (user) => {
@@ -30,17 +31,24 @@ export const register = async (req,res) => {
         }
 
         // Role default mahasiswa
-        const user = new User({
-            nama,
-            nimNip,
-            email,
-            password,
-            prodi,
-            angkatan,
-            noTelp,
-        });
+        // const user = new User({
+        //     nama,
+        //     nimNip,
+        //     email,
+        //     password,
+        //     prodi,
+        //     angkatan,
+        //     noTelp,
+        // });
         
-        await user.save();
+        // await user.save();
+
+        // Membuat data registrasi dengan role bawaan mahasiswa
+        const user = await User.create({
+            nama,nimNip,email,password,prodi,angkatan,noTelp,role : 'mahasiswa'
+        });
+
+
         const token = generateToken(user);
         res.status(201).json({
             message: "Registrasi berhasil",
@@ -64,6 +72,10 @@ export const login  = async (req,res) => {
         }
 
         const {email, password} = req.body;
+        const salt = await bcrypt.genSalt(10);
+        let pass = await bcrypt.hash(password, salt);
+        console.log(pass);
+        return
         const user = await User.findOne({email}).select('+password');
         if (!user || !(await user.comparePassword(password))){
             return res.status(401).json({
@@ -91,12 +103,12 @@ export const login  = async (req,res) => {
             }
         })
     } catch (error) {
-        next(error);
+        res.status(500).json({ message: error.message });
     }
 }
 
 // Siapa saya
-export const getMe = async (req,res,next) => {
+export const getMe = async (req,res) => {
     try {
         const user = await User.findById(req.user._id);
         console.log(user);
@@ -106,7 +118,7 @@ export const getMe = async (req,res,next) => {
         })
 
     } catch (error) {
-        next(error);
+        res.status(500).json({ message: error.message });
     }
 }
 

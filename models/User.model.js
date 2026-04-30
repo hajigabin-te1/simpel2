@@ -66,7 +66,7 @@ userSchema.pre("save", async function (next) {
 
  // Metode untuk membandingkan password saat login
 userSchema.methods.comparePassword = async function (candidatePassword) {
-    return await bcrypt.compare(candidatePassword, this.password);
+    return bcrypt.compare(candidatePassword, this.password);
 };
 
  // Sembunyikan field sensitif saat toJSON

@@ -2,7 +2,7 @@ import { validationResult } from "express-validator";
 import User from "../models/User.model.js";
 
 // Get User (admin only)
-export const getUser = async (req,res) => {
+export const getUser = async (req,res,next) => {
     try { 
         const { role, isActive, search, page = 1, limit = 10 } = req.query;
         const filter = {};
@@ -30,12 +30,12 @@ export const getUser = async (req,res) => {
             }
         })
     } catch (error){
-            next(error);    
+            return next(error);    
         }
 }
 
 // ── GET /api/users/:id ───────────────────
-export const getUserById = async (req,res) => {
+export const getUserById = async (req,res,next) => {
     try {
         const user = await User.findById(req.params.id);
         if (!user) {
@@ -43,11 +43,11 @@ export const getUserById = async (req,res) => {
         }
         res.json({ success: true, data: user });
     } catch(error){
-        next(error);
+        return next(error);
     }
 }
 
-export const createUser = async (req,res) => {
+export const createUser = async (req,res,next) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -63,12 +63,12 @@ export const createUser = async (req,res) => {
         res.status(201).json({ success: true, data: newUser });
 
     } catch (error){
-        next(error);
+        return next(error);
     }
 }
 
 // update data user
-export const updateUser = async (req,res) => {
+export const updateUser = async (req,res,next) => {
     try {
         //cegah update data user lain
         if (req.user.id !== req.params.id && req.user.role !== 'admin') {
@@ -89,12 +89,12 @@ export const updateUser = async (req,res) => {
         }
         res.json({ success: true, data: user });
     } catch(error){
-        next(error);
+        return next(error);
     }
 }
 
 // delete disini maksudnya untuk menonaktifkan user, bukan menghapus data user dari database. Jadi data user tetap ada, tapi tidak bisa digunakan untuk login atau aktivitas lainnya.
-export const deleteUser = async (req,res) => {
+export const deleteUser = async (req,res,next) => {
     try { 
         const user = await User.findByIdAndUpdate(req.params.id, { isActive: false }, { new: true });
         if (!user) {
@@ -102,12 +102,12 @@ export const deleteUser = async (req,res) => {
         }
         res.json({ success: true, message: 'User deactivated successfully', data: user });
     } catch (error){
-        next(error);
+        return next(error);
     }
 }
 
 // Update profil user (user sendiri)
-export const updateProfile = async (req,res) => {
+export const updateProfile = async (req,res,next) => {
     try {
         const bolehUpdate = ['nama', 'prodi', 'avatar', 'noTelp'];
         const updateData = {};
@@ -121,6 +121,6 @@ export const updateProfile = async (req,res) => {
         const user = await User.findByIdAndUpdate(req.user._id, updateData, { new : true});
         res.json({ success: true, message : "Profil Berhasil diperbaharui" , data: user });
     } catch (error) {
-        next(error);
+        return next(error);
     }
 }

@@ -30,7 +30,7 @@ import mongoose from 'mongoose';
 export const connectDB = async () => {
   try {
     const conn = await mongoose.connect(process.env.MONGO_URI, {
-      dbName: 'batin-hub'
+      dbName: 'batin_hub'
     });
 
     console.log(`✅ MongoDB terhubung: ${conn.connection.host}`);

@@ -327,7 +327,7 @@ export const unggahDokumen = async (req,res, next) => {
             data : tiket
         });
     } catch (error) {
-        res.status(501).json({ message : error.message});
+        next(error);
     }
 }
 

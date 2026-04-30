@@ -30,6 +30,17 @@ initSocket(server);
 // Middleware
 app.use(helmet());
 app.use(morgan('combined'));
+
+// ── Health Check ───────────────────────
+app.get('/api/health', (_req, res) => {
+  res.json({
+    status: 'OK',
+    message: 'Pelayanan Kampus API berjalan',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV,
+  });
+});
+
 app.use(bodyParser.json());
 const port = 3000;
 
@@ -66,10 +77,24 @@ app.use((_req, res) => {
   res.status(404).json({ message: 'Endpoint tidak ditemukan' });
 });
 
+// ── Global Error Handler ───────────────
+app.use((err, _req, res, _next) => {
+  console.error('❌ Error:', err.stack);
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
+  const statusCode = err.statusCode || 500;
+  res.status(statusCode).json({
+    success: false,
+    message: err.message || 'Terjadi kesalahan pada server',
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
+  });
 });
+
+
+// app.get('/', (req, res) => {
+//   res.send('Hello World!');
+// });
+
+
 
 
 // Start the server
@@ -78,6 +103,7 @@ server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV}`);
   console.log(`MongoDB URI: ${process.env.MONGO_URI}`);
+  console.log(`🔗 URL : http://localhost:${PORT}/api/health\n`);
 });
 
 export default app;

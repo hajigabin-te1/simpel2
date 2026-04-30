@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import bcrypt from "bcryptjs";
-import User from "../models/User.js";
-import ServiceType from "../models/ServiceType.js";
+//import bcrypt from "bcryptjs";
+import User from "../models/User.model.js";
+import ServiceType from "../models/ServiceType.model.js";
 
 dotenv.config();
 
@@ -10,7 +10,7 @@ const seedUsers = [
     {
         nama : "Administrator",
         email : "moh.fathi404@gmail.com",
-        password : bcrypt.hashSync("admin123", 10),
+        password : "admin123",
         nimNip : "0000000000",
         role : "admin",
         isActive : true
@@ -18,15 +18,15 @@ const seedUsers = [
     {
         nama : "Operator",
         email : "operator@mail.com",
-        password : bcrypt.hashSync("operator123", 10),
+        password : "operator123",
         nimNip : "1111111111",
         role : "operator",
         isActive : true
     },
     {
         nama : "Eva Febriyanti",
-        email : "eva_feb@gmail.com",
-        password : bcrypt.hashSync("user123", 10),
+        email : "ocha@gmail.com",
+        password : "admin123",
         nimNip : "1234567890",
         role : "mahasiswa",
         angkatan : 2024,
@@ -37,7 +37,7 @@ const seedUsers = [
 
 const seedServiceTypes = [ 
     {
-        nama : "Pengajuan Surat Keterangan Aktif Kuliah",
+        namaLayanan : "Pengajuan Surat Keterangan Aktif Kuliah",
         kode : "SKAK",
         deskripsi : "Surat Keterangan Aktif Kuliah untuk keperluan administrasi kampus",
         icon : "https://res.cloudinary.com/dwbujbyjb/image/upload/v1700000000/skak_icon.png",
@@ -62,7 +62,7 @@ const seedServiceTypes = [
         urutan : 1
     },
     {
-        nama : "Pengajuan Surat Keterangan Lulus",
+        namaLayanan : "Pengajuan Surat Keterangan Lulus",
         kode : "SKL",
         deskripsi : "Surat Keterangan Lulus untuk keperluan administrasi kampus",
         icon : "https://res.cloudinary.com/dwbujbyjb/image/upload/v1700000000/skl_icon.png",
@@ -78,7 +78,7 @@ const seedServiceTypes = [
         urutan : 2
     },
     {
-        nama : "Pengajuan Permintaan Cetak Kartu Rencana Studi (KRS)",
+        namaLayanan : "Pengajuan Permintaan Cetak Kartu Rencana Studi (KRS)",
         kode : "SKRS",
         deskripsi : "Surat Kartu Rencana Studi untuk keperluan administrasi kampus",
         icon : "https://res.cloudinary.com/dwbujbyjb/image/upload/v1700000000/skrs_icon.png",
@@ -88,7 +88,7 @@ const seedServiceTypes = [
         urutan : 3
     },
     {
-        nama : "Pengajuan Surat Kartu Hasil Studi (KHS)",
+        namaLayanan : "Pengajuan Surat Kartu Hasil Studi (KHS)",
         kode : "SKHS",
         deskripsi : "Surat Kartu Hasil Studi untuk keperluan administrasi kampus",
         icon : "https://res.cloudinary.com/dwbujbyjb/image/upload/v1700000000/skhs_icon.png",
@@ -97,7 +97,7 @@ const seedServiceTypes = [
         butuhLampiran : false,
         urutan : 4
     },{
-        nama : "Permohonan Cetak Transkrip Nilai",
+        namaLayanan : "Permohonan Cetak Transkrip Nilai",
         kode : "SCTN",
         deskripsi : "Surat Cetak Transkrip Nilai untuk keperluan administrasi kampus",
         icon : "https://res.cloudinary.com/dwbujbyjb/image/upload/v1700000000/sctn_icon.png",
@@ -107,7 +107,7 @@ const seedServiceTypes = [
         urutan : 5
     },
     {
-        nama : "Pengajuan Surat Keterangan Penelitian",
+        namaLayanan : "Pengajuan Surat Keterangan Penelitian",
         kode : "SKP",
         deskripsi : "Surat Keterangan Penelitian untuk keperluan administrasi kampus",
         icon : "https://res.cloudinary.com/dwbujbyjb/image/upload/v1700000000/skp_icon.png",
@@ -141,7 +141,7 @@ const seedServiceTypes = [
         }],
         urutan : 6
     },{
-        nama : "Pengajuan Surat Keterangan Magang",
+        namaLayanan : "Pengajuan Surat Keterangan Magang",
         kode : "SKM",
         deskripsi : "Surat Keterangan Magang untuk keperluan administrasi kampus",
         icon : "https://res.cloudinary.com/dwbujbyjb/image/upload/v1700000000/skm_icon.png",
@@ -157,7 +157,7 @@ const seedServiceTypes = [
         butuhLampiran : true,
         keteranganLampiran : "Lampirkan surat penerimaan magang dari perusahaan atau instansi dan bukti pembayaran biaya administrasi magang"    
     },{
-        nama : "Pengajuan Surat Keterangan Bebas Perpustakaan",
+        namaLayanan : "Pengajuan Surat Keterangan Bebas Perpustakaan",
         kode : "SKBP",
         deskripsi : "Surat Keterangan Bebas Perpustakaan untuk keperluan administrasi kampus",
         icon : "https://res.cloudinary.com/dwbujbyjb/image/upload/v1700000000/skbp_icon.png",
@@ -166,7 +166,7 @@ const seedServiceTypes = [
         butuhLampiran : false,
         urutan : 8
     },{
-        nama : "Pengajuan Surat Keterangan Publikasi Ilmiah",
+        namaLayanan : "Pengajuan Surat Keterangan Publikasi Ilmiah",
         kode : "SKPI",
         deskripsi : "Surat Keterangan Publikasi Ilmiah untuk keperluan administrasi kampus",
         icon : "https://res.cloudinary.com/dwbujbyjb/image/upload/v1700000000/skpi_icon.png",
@@ -188,7 +188,7 @@ const seedServiceTypes = [
         keteranganLampiran : "Lampirkan bukti publikasi ilmiah seperti link jurnal atau sertifikat konferensi",
         urutan : 9
     },{
-        nama : "Surat Peminjaman Ruangan",
+        namaLayanan : "Surat Peminjaman Ruangan",
         kode : "SPR",
         deskripsi : "Surat Peminjaman Ruangan untuk keperluan administrasi kampus",
         icon : "https://res.cloudinary.com/dwbujbyjb/image/upload/v1700000000/spr_icon.png",
