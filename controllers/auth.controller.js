@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs';
 
 // helper buat token
 const generateToken = (user) => {
-    jwt.sign({id}, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }, (err, token) => {
+    jwt.sign({user}, process.env.JWT_SECRET_KEY, { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }, (err, token) => {
         if (err) {
             console.log(err);
         }
@@ -13,7 +13,7 @@ const generateToken = (user) => {
     });
 }
 
-export const register = async (req,res) => {
+export const register = async (req,res,next) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -49,14 +49,15 @@ export const register = async (req,res) => {
         });
 
 
-        const token = generateToken(user);
+        const token = generateToken(user._id);
+        console.log(token);
         res.status(201).json({
             message: "Registrasi berhasil",
             success: true,
             data : { token, user }
         });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+       next(error);
     }
 }
 
@@ -72,10 +73,9 @@ export const login  = async (req,res) => {
         }
 
         const {email, password} = req.body;
-        const salt = await bcrypt.genSalt(10);
-        let pass = await bcrypt.hash(password, salt);
-        console.log(pass);
-        return
+        // const salt = await bcrypt.genSalt(10);
+        // let pass = await bcrypt.hash(password, salt);
+        // console.log(pass);
         const user = await User.findOne({email}).select('+password');
         if (!user || !(await user.comparePassword(password))){
             return res.status(401).json({
@@ -83,7 +83,7 @@ export const login  = async (req,res) => {
                 success: false
             });
         }
-        console.table(user);
+        console.info(user);
 
         if (!user.isActive){
             return res.status(403).json({

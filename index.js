@@ -3,7 +3,7 @@ import http from 'http';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import bodyParser from 'body-parser';
+//import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 
 import { connectDB } from './config/db.js';
@@ -24,28 +24,13 @@ connectDB();
 const app = express();
 const server = http.createServer(app);
 
+
+
 // Initialize Socket.IO
 initSocket(server);
 
-// Middleware
+// Global Middleware
 app.use(helmet());
-app.use(morgan('combined'));
-
-// ── Health Check ───────────────────────
-app.get('/api/health', (_req, res) => {
-  res.json({
-    status: 'OK',
-    message: 'Pelayanan Kampus API berjalan',
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV,
-  });
-});
-
-app.use(bodyParser.json());
-const port = 3000;
-
-
-
 app.use(cors({
   origin: '*',
   credentials: true,
@@ -59,22 +44,47 @@ app.use(express.urlencoded({
   limit: '10mb',
   extended: true
 }));
-app.use(bodyParser.json());
+//app.use(morgan('combined'));
+// API routes
+app.use('/api/auth', authRoutes);
+
+// ── Health Check ───────────────────────
+app.get('/api/health', (_req, res) => {
+  res.json({
+    status: 'OK',
+    message: 'Pelayanan Kampus API berjalan',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV,
+  });
+});
+
+
+const port = 3000;
+
+// app.use(bodyParser.json({
+//   limit: '10mb'
+// }));
+// app.use(bodyParser.urlencoded({
+//   limit: '10mb',
+//   extended: true
+// }));
+
+
+
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-// API routes
-app.use('/api/auth', authRoutes);
+
 // app.use('/api/services', serviceRoutes);
 // app.use('/api/tickets', ticketRoutes);
 // app.use('/api/reports', reportRoutes);
 
 
-// 404 handler
+// ── 404 Handler ────────────────────────
 app.use((_req, res) => {
-  res.status(404).json({ message: 'Endpoint tidak ditemukan' });
+  res.status(404).json({ success: false, message: 'Route tidak ditemukan' });
 });
 
 // ── Global Error Handler ───────────────

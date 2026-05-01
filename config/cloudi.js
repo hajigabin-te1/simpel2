@@ -36,6 +36,7 @@ storage: tiketStorage,
 limits : { fileSize: 5 * 1024 * 1024 }, // Batas ukuran file 5MB
 });
 
+
 export const uploadAvatar = multer({
 storage: avatarStorage,
 limits : { fileSize: 2 * 1024 * 1024 }, // Batas ukuran file 2MB

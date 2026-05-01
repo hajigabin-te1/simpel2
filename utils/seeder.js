@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-//import bcrypt from "bcryptjs";
+import bcrypt from "bcryptjs";
 import User from "../models/User.model.js";
 import ServiceType from "../models/ServiceType.model.js";
 
@@ -237,8 +237,20 @@ const runSeed = async () => {
         ]);
         console.log("Data lama berhasil dihapus");
         // Masukkan data baru
-        await User.insertMany(seedUsers);
+        await User.insertMany(
+        await Promise.all(
+                seedUsers.map( async (u) => ({
+                    ...u,
+                    password : await bcrypt.hash(u.password,10)
+                })
+                )
+            )
+        );
+        console.log(`👥 ${seedUsers.length} user berhasil di-seed`);
+
+
         await ServiceType.insertMany(seedServiceTypes);
+        console.log(`📋 ${seedServiceTypes.length} jenis layanan berhasil di-seed`);
         console.log("Data baru berhasil dimasukkan");
         process.exit(0);
     } catch (error) {
