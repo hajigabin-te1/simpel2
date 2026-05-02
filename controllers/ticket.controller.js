@@ -197,7 +197,7 @@ export const createTicket = async (req,res) => {
     }
 }
 
-// PUt API update tiket (hanya untuk operator)
+// PUt API update tiket (hanya untuk operator dan admin)
 export const updateTicket = async (req,res) => {
     try {
         const { status, alasanPenolakan, catatanOperator } = req.body;
