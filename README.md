@@ -1,5 +1,5 @@
 
-# Sistem Informasi Pelayanan Terpadu Kampus
+# Sistem Informasi Pelayanan Terpadu Kampus (Backend)
 
 =======================
 
@@ -18,9 +18,7 @@ Aplikasi helpdesk loket kampus — operator menampung, memproses, dan menyelesai
 
 ## Tech Stack
 
-**Client:** React, Redux, TailwindCSS, Axios
-
-**Server:** Node, Express, MongoDB
+**Tech** Node, Express, MongoDB
 
 
 
