@@ -18,7 +18,7 @@ Aplikasi helpdesk loket kampus — operator menampung, memproses, dan menyelesai
 
 ## Tech Stack
 
-**Tech** Node, Express, MongoDB
+**:** Node, Express, MongoDB, Multer, Cloudinary
 
 
 

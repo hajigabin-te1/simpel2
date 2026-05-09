@@ -6,7 +6,7 @@ import { Izinkan } from '../middleware/role.middleware.js';
 
 const router = Router();
 
-router.use(verifyToken);
+//router.use(verifyToken);
 
 router.get('/', getService);
 router.get('/:id', getServiceById);

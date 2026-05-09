@@ -1,5 +1,5 @@
 import { validationResult } from "express-validator";
-import ServiceType from "../models/Service.model.js";
+import ServiceType from "../models/ServiceType.model.js";
 
 
 export const getService = async (req,res) => {
@@ -13,7 +13,10 @@ export const getService = async (req,res) => {
             urutan : 1,
             namaLayanan : 1
         });
-        
+        res.status(200).json({
+            success : true,
+            data : service
+        });
     } catch (error) {
         res.status(403).json({
             message : error
@@ -51,16 +54,18 @@ export const createService = async (req,res) => {
                 message : err.array()
             });
         }
-        const { namaLayanan, urutan, isActive } = req.body;
-        const newService = new ServiceType({
-            namaLayanan,
-            urutan,
-            isActive
-        });
-        await newService.save();
+        // const { namaLayanan, urutan, isActive } = req.body;
+        // const newService = new ServiceType({
+        //     namaLayanan,
+        //     urutan,
+        //     isActive
+        // });
+
+        const service = await ServiceType.create(req.body);
+        // await newService.save();
         res.status(201).json({
-            message : "Layanan berhasil dibuat",
-            data : newService
+            message : "Jenis Layanan baru berhasil dibuat",
+            data : service
         });
 
     } catch (error) {

@@ -1,5 +1,5 @@
-import Tiket from '../models/tiket.model.js';
-import ServiceType from '../models/Service.model.js';
+import Tiket from '../models/Ticket.model.js';
+import ServiceType from '../models/ServiceType.model.js';
 import User from '../models/User.model.js';
 
 // ambil data laporan berdasarkan id layanan

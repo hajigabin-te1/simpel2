@@ -11,6 +11,10 @@ import { initSocket } from './socket/socketHandler.js';
 
 // Import routes
 import authRoutes from './routes/auth.routes.js';
+import serviceRoutes from './routes/service.routes.js';
+import ticketRoutes from "./routes/ticket.routes.js";
+import userRouters from "./routes/user.routes.js";
+import reportRoutes from "./routes/report.routes.js"
 
 // ========================== App Initialization ==========================
 
@@ -47,6 +51,9 @@ app.use(express.urlencoded({
 //app.use(morgan('combined'));
 // API routes
 app.use('/api/auth', authRoutes);
+app.use('/api/services', serviceRoutes);
+app.use('/api/tickets', ticketRoutes);
+app.use('/api/reports', reportRoutes);
 
 // ── Health Check ───────────────────────
 app.get('/api/health', (_req, res) => {
@@ -75,11 +82,6 @@ const port = 3000;
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
-
-
-// app.use('/api/services', serviceRoutes);
-// app.use('/api/tickets', ticketRoutes);
-// app.use('/api/reports', reportRoutes);
 
 
 // ── 404 Handler ────────────────────────

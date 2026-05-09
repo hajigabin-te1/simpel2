@@ -38,7 +38,7 @@ const ticketScheme = new mongoose.Schema({
     },
     // Field dinamis untuk menyimpan data tambahan
     dataDinamis : {
-        type : mongoose.Schema.types.Mixed,
+        type : mongoose.Schema.Types.Mixed,
         default : {}
     },
     lampiran : [
@@ -93,7 +93,7 @@ ticketScheme.pre('save', function(next){
     next();
 });
 
-ticketScheme.index({ nomorTiket : 1}); // Index untuk pencarian cepat berdasarkan nomor tiket
+// ticketScheme.index({ nomorTiket : 1}); // Index untuk pencarian cepat berdasarkan nomor tiket
 ticketScheme.index({ mahasiswa : 1 , status : 1 }); // Index untuk pencarian tiket berdasarkan mahasiswa
 ticketScheme.index({ operator : 1 , status : 1 }); // Index untuk pencarian tiket berdasarkan operator
 ticketScheme.index({ createdAt : -1 }); // Index untuk pencarian tiket berdasarkan tanggal pembuatan
